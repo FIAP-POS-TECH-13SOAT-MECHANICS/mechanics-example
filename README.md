@@ -65,3 +65,14 @@ Após o processo concluir, o projeto estará disponível nas seguintes URLs:
 > Utilize o script [dev-seeds](./dev-seeds/README.md) para popular o banco com dados de exemplo.
 
 Utilize o script `invoke-getToken.ps1` para obter um token de acesso. É necessário que o serviço [Mechanics.Auth](https://github.com/FIAP-POS-TECH-13SOAT-MECHANICS/mechanics-auth) já esteja em execução.
+
+## Pipeline de CI/CD
+
+Ao criar uma PR para as branches abaixo, os testes automatizados serão executados.
+Ao completar o PR, os testes são novamente executados e é feito o deploy no ambiente.
+
+| Branch    | Ambiente    |
+|-----------|-------------|
+| `main`    | Production  |
+| `release` | Staging     |
+| `develop` | Development |
