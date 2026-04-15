@@ -1,0 +1,38 @@
+﻿using Mechanics.Api;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
+using System.Collections.Concurrent;
+using System.Net.Http.Headers;
+using System.Security.Cryptography;
+
+namespace Mechanics.Tests.Integration.Helpers;
+
+public class ApplicationFactory : WebApplicationFactory<Program>
+{
+    private readonly ConcurrentDictionary<string, string?> _tokens = new();
+    private readonly RSA _rsa = RSA.Create();
+
+    public HttpClient GetAuthenticatedClient(string roleName)
+    {
+        var authenticatedClient = CreateClient();
+        var token = _tokens.GetOrAdd(roleName, _ => GetToken());
+        authenticatedClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        return authenticatedClient;
+
+        string GetToken()
+        {
+            var tokenGenerator = new TestTokenGenerator(_rsa);
+            return tokenGenerator.GenerateAccessTokenByRoleName(roleName);
+        }
+    }
+
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
+        Directory.CreateDirectory(Path.Combine(AppContext.BaseDirectory, "keys"));
+        var publicKeyPath = Path.Combine(AppContext.BaseDirectory, "keys", "jwt-public.pem");
+        File.WriteAllText(publicKeyPath, _rsa.ExportRSAPublicKeyPem());
+
+        base.ConfigureWebHost(builder);
+    }
+}

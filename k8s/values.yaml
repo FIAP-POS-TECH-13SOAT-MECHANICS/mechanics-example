@@ -1,0 +1,32 @@
+app:
+  name: fiap-mechanics
+  version: 1.0.0
+  env: dev
+  port: 5000
+  runMigrationsOnUpdate: true
+  baseUrl: http://localhost:5000
+  routePrefix: api
+
+service:
+  minReplicas: 2
+  maxReplicas: 4
+
+datadog:
+  useJsonLogs: true
+
+image:
+  repository: ""
+  tag: latest
+
+email:
+  smtpServer: mailpit-smtp
+  smtpPort: 25
+  sslRequired: false
+  senderName: FIAP Mechanics
+  senderAddress: "postmaster@mechanics.com"
+
+secrets:
+  clusterSecretStore: fiap-mechanics-aws-secrets
+  databaseSecretNameSufix: database
+  emailSecretNameSufix: email
+  keysSecretNameSufix: jwt/public-key
