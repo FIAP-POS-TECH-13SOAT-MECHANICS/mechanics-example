@@ -13,8 +13,14 @@ data:
   AppInfo__BaseUrl: {{ .Values.app.baseUrl | quote }}
   AppInfo__RoutePrefix: {{ .Values.app.routePrefix | quote }}
   Datadog__UseJsonLogs: {{ .Values.datadog.useJsonLogs | quote }}
+  Datadog__OtlpEndpoint: {{ .Values.datadog.otlpEndpoint | quote }}
+  Datadog__ApiKey: {{ .Values.datadog.apiKey | quote }}
   EmailSenderOptions__SmtpServer: {{ .Values.email.smtpServer | quote }}
   EmailSenderOptions__SmtpPort: {{ .Values.email.smtpPort | quote }}
   EmailSenderOptions__SslRequired: {{ .Values.email.sslRequired | quote }}
   EmailSenderOptions__SenderInformation__Name: {{ .Values.email.senderName | quote }}
   EmailSenderOptions__SenderInformation__Address: {{ .Values.email.senderAddress | quote }}
+  LuckyPennyLicenseKey: {{ .Values.luckyPennyLicenseKey | quote }}
+  {{- range $key, $value := .Values.queueNames }}
+  MessagingOptions__QueueNames__{{ $key }}: "{{ $.Values.app.name }}-{{ $.Values.app.env }}-{{ $value }}"
+  {{- end }}

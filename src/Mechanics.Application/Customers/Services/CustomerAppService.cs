@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
-using Mechanics.Application.Auth.Requests;
-using Mechanics.Application.Auth.Services;
+using Mechanics.Application.Customers.Events;
 using Mechanics.Application.Customers.Requests;
 using Mechanics.Application.Customers.Responses;
 using Mechanics.Application.Utils;
@@ -9,11 +8,12 @@ using Mechanics.Application.Utils.PagedList;
 using Mechanics.Domain.Base.Validation;
 using Mechanics.Domain.Customers;
 using Mechanics.Infra.Data;
+using Mechanics.Infra.Messaging.Publishers;
 using Microsoft.EntityFrameworkCore;
 
 namespace Mechanics.Application.Customers.Services;
 
-public class CustomerAppService(AppDbContext dbContext, UserAppService userAppService, IMapper mapper) : IAppService
+public class CustomerAppService(AppDbContext dbContext, IEventPublisher eventPublisher, IMapper mapper) : IAppService
 {
     public async Task<GetCustomerResponse?> Get(Guid id, CancellationToken cancellationToken)
     {
@@ -72,11 +72,11 @@ public class CustomerAppService(AppDbContext dbContext, UserAppService userAppSe
             entity.Normalize();
         Validator.ValidateAndThrow(entity);
 
-        await dbContext.Customers.AddAsync(entity, cancellationToken);
+        dbContext.Customers.Add(entity);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        var userRequest = new CreateUserForCustomerRequest(entity.Id, request);
-        await userAppService.Create(userRequest, cancellationToken);
+        var message = new CustomerCreatedEvent(entity.Id, request);
+        await eventPublisher.PublishAsync(message, cancellationToken);
 
         return new CreateItemResponse { CreatedId = entity.Id };
     }
@@ -95,11 +95,11 @@ public class CustomerAppService(AppDbContext dbContext, UserAppService userAppSe
             entity.Normalize();
         Validator.ValidateAndThrow(entity);
 
-        await dbContext.Customers.AddAsync(entity, cancellationToken);
+        dbContext.Customers.Add(entity);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        var userRequest = new CreateUserForCustomerRequest(entity.Id, request, true);
-        await userAppService.Create(userRequest, cancellationToken);
+        var message = new CustomerCreatedEvent(entity.Id, request, true);
+        await eventPublisher.PublishAsync(message, cancellationToken);
 
         return new CreateItemResponse { CreatedId = entity.Id };
     }

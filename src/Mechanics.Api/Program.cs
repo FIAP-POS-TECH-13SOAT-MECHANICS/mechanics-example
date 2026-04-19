@@ -36,13 +36,10 @@ public class Program
         builder.Services.AddSwaggerDocumentation(builder.Configuration);
 
         builder.Services.AddDbContext(builder.Configuration)
-#if DEBUG
-            .AddAuthenticationWithoutValidation()
-#else
-            .AddValidatedAuthentication()
-#endif
+            .AddJwtAuthentication(validateInDebugMode: false)
             .AddAppServices(builder.Configuration)
             .AddRequestValidators()
+            .AddMessaging(builder.Configuration)
             .AddEmailSender(builder.Configuration);
 
         builder.Services.AddHealthChecks()
