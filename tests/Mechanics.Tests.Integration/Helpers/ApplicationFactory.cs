@@ -48,7 +48,7 @@ public class ApplicationFactory : WebApplicationFactory<Program>
 
             var options = services.BuildServiceProvider().GetRequiredService<IOptions<MessagingOptions>>();
             foreach (var queue in options.Value.QueueNames.Values)
-                client.CreateQueueAsync(queue, CancellationToken.None).Wait();
+                client.CreateQueueAsync(queue, CancellationToken.None).GetAwaiter().GetResult();
         });
 
         base.ConfigureWebHost(builder);

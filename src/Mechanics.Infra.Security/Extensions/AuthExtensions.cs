@@ -18,7 +18,7 @@ public static class AuthExtensions
     /// <summary>
     ///     Configura autenticação por JWT.
     /// </summary>
-    /// <remarks>A chave do token sempre é validado em modo de Release.</remarks>
+    /// <remarks>A chave do token sempre é validada em modo de Release.</remarks>
     public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, bool validateInDebugMode)
     {
 #if DEBUG
