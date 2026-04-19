@@ -1,6 +1,7 @@
 ﻿using Amazon.Runtime;
 using Amazon.SQS;
 using Mechanics.Infra.Messaging.Consumers;
+using Mechanics.Infra.Messaging.Helpers;
 using Mechanics.Infra.Messaging.Options;
 using Mechanics.Infra.Messaging.Publishers;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,6 +32,7 @@ public static class MessagingExtensions
         });
 
         services.AddSingleton<IEventPublisher, EventPublisher>();
+        services.AddSingleton<QueueUrlResolver>();
 
         var builder = new MessagingBuilder(services);
         configure?.Invoke(builder);
@@ -47,6 +49,7 @@ public class MessagingBuilder(IServiceCollection services)
     {
         Services.AddScoped<IEventConsumer<TEvent>, TConsumer>();
         Services.AddHostedService<ConsumerBackgroundService<TEvent>>();
+
         return this;
     }
 }

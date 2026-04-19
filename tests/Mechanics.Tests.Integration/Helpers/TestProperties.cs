@@ -1,10 +1,6 @@
 ﻿using Amazon.Runtime;
 using Amazon.SQS;
 using DotNet.Testcontainers.Containers;
-using Mechanics.Infra.Messaging.Options;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Testcontainers.MsSql;
 
 namespace Mechanics.Tests.Integration.Helpers;

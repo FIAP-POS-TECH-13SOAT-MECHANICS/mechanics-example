@@ -1,17 +1,16 @@
 ﻿using Amazon.SQS;
 using Amazon.SQS.Model;
-using Mechanics.Infra.Messaging.Options;
+using Mechanics.Infra.Messaging.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System.Text.Json;
 
 namespace Mechanics.Infra.Messaging.Consumers;
 
 public class ConsumerBackgroundService<T>(
     IAmazonSQS sqsClient,
-    IOptions<MessagingOptions> options,
+    QueueUrlResolver urlResolver,
     IServiceScopeFactory scopeFactory,
     ILogger<ConsumerBackgroundService<T>> logger) : BackgroundService where T : class
 {
@@ -19,15 +18,7 @@ public class ConsumerBackgroundService<T>(
 
     public override async Task StartAsync(CancellationToken cancellationToken)
     {
-        var key = typeof(T).Name.Replace("Event", string.Empty);
-        var queueNames = options.Value.QueueNames;
-
-        if (!queueNames.TryGetValue(key, out var queueName))
-            throw new InvalidOperationException(
-                $"Queue not configured for event '{key}'.");
-
-        var response = await sqsClient.GetQueueUrlAsync(queueName, cancellationToken);
-        _queueUrl = response.QueueUrl;
+        _queueUrl = await urlResolver.ResolveAsync<T>(cancellationToken);
 
         await base.StartAsync(cancellationToken);
     }
@@ -58,17 +49,23 @@ public class ConsumerBackgroundService<T>(
 
         try
         {
+            logger.LogInformation("Processing message '{MessageId}' for event '{EventType}'",
+                sqsMessage.MessageId, typeof(T).Name);
+
             var message = JsonSerializer.Deserialize<T>(sqsMessage.Body) ??
                           throw new InvalidOperationException($"Failed to deserialize message body to '{typeof(T).Name}'.");
 
             await consumer.ConsumeAsync(message, cancellationToken);
 
             await sqsClient.DeleteMessageAsync(_queueUrl, sqsMessage.ReceiptHandle, cancellationToken);
+
+            logger.LogInformation("Message '{MessageId}' for event '{EventType}' processed and deleted",
+                sqsMessage.MessageId, typeof(T).Name);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error processing message '{MessageId}' from queue '{QueueUrl}'. " +
-                                "Message will return to queue after visibility timeout", sqsMessage.MessageId, _queueUrl);
+            logger.LogError(ex, "Error processing message '{MessageId}' from queue '{QueueUrl}'",
+                sqsMessage.MessageId, _queueUrl);
         }
     }
 }

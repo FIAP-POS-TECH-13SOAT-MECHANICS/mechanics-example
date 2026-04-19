@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
-using Mechanics.Application.Auth.Services;
 using Mechanics.Application.Customers.Requests;
 using Mechanics.Application.Customers.Services;
 using Mechanics.Application.Utils.CommonResponses;
 using Mechanics.Domain.Base.Validation;
 using Mechanics.Domain.Customers;
-using Mechanics.Infra.Data;
 using Mechanics.Tests.Unit.Helpers;
 using Mechanics.Tests.Unit.Mocks;
 using Microsoft.EntityFrameworkCore;
