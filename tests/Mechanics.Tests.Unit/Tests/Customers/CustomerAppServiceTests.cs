@@ -26,7 +26,7 @@ public class CustomerAppServiceTests
     {
         // Arrange
         await using var context = new DbContextTestBuilder().Build();
-        var handler = new CustomerAppService(context, CreateUserAppService(context), _mapper);
+        var handler = new CustomerAppService(context,  new NullEventPublisher(), _mapper);
         var request = CustomerMocks.BuildCreateRequestPf();
 
         // Act
@@ -48,7 +48,7 @@ public class CustomerAppServiceTests
     {
         // Arrange
         await using var context = new DbContextTestBuilder().Build();
-        var handler = new CustomerAppService(context, CreateUserAppService(context), _mapper);
+        var handler = new CustomerAppService(context,  new NullEventPublisher(), _mapper);
         var request = CustomerMocks.BuildCreateRequestPj();
 
         // Act
@@ -68,7 +68,7 @@ public class CustomerAppServiceTests
     {
         // Arrange
         await using var context = new DbContextTestBuilder().Build();
-        var handler = new CustomerAppService(context, CreateUserAppService(context), _mapper);
+        var handler = new CustomerAppService(context,  new NullEventPublisher(), _mapper);
         var request = CustomerMocks.BuildInvalidCreateRequest();
 
         // Act + Assert
@@ -89,7 +89,7 @@ public class CustomerAppServiceTests
         var id = Guid.NewGuid();
         var existing = CustomerMocks.CreateCustomerPf(id);
         await using var context = new DbContextTestBuilder().WithData(ctx => ctx.Customers.Add(existing)).Build();
-        var handler = new CustomerAppService(context, CreateUserAppService(context), _mapper);
+        var handler = new CustomerAppService(context,  new NullEventPublisher(), _mapper);
         var request = CustomerMocks.BuildUpdateRequest();
 
         // Act
@@ -114,7 +114,7 @@ public class CustomerAppServiceTests
         var id = Guid.NewGuid();
         var existing = CustomerMocks.CreateCustomerPf(id);
         await using var context = new DbContextTestBuilder().WithData(ctx => ctx.Customers.Add(existing)).Build();
-        var handler = new CustomerAppService(context, CreateUserAppService(context), _mapper);
+        var handler = new CustomerAppService(context,  new NullEventPublisher(), _mapper);
         var request = CustomerMocks.BuildInvalidUpdateRequest();
 
         // Act + Assert
@@ -135,7 +135,7 @@ public class CustomerAppServiceTests
         var id = Guid.NewGuid();
         var existing = CustomerMocks.CreateCustomerPf(id);
         await using var context = new DbContextTestBuilder().WithData(ctx => ctx.Customers.Add(existing)).Build();
-        var handler = new CustomerAppService(context, CreateUserAppService(context), _mapper);
+        var handler = new CustomerAppService(context,  new NullEventPublisher(), _mapper);
 
         // Act
         var response = await handler.Get(id, TestContext.CancellationTokenSource.Token);
@@ -158,7 +158,7 @@ public class CustomerAppServiceTests
             CustomerMocks.CreateCustomerPj(Guid.NewGuid()),
         };
         await using var context = new DbContextTestBuilder().WithData(customers).Build();
-        var handler = new CustomerAppService(context, CreateUserAppService(context), _mapper);
+        var handler = new CustomerAppService(context, new NullEventPublisher(), _mapper);
         var request = new GetCustomersRequest { Page = 1, ItemsPerPage = 10 };
 
         // Act
@@ -171,7 +171,4 @@ public class CustomerAppServiceTests
     }
 
     #endregion
-
-    private static UserAppService CreateUserAppService(AppDbContext context) => new(context,
-        AutoMapperFactory.CreateMap("Mechanics.Application"), new EmailServiceMock());
 }

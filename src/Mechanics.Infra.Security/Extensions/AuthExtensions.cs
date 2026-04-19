@@ -16,10 +16,25 @@ public static class AuthExtensions
     private const string JwtTokenIssuer = "fiap-mechanics";
 
     /// <summary>
+    ///     Configura autenticação por JWT.
+    /// </summary>
+    /// <remarks>A chave do token sempre é validado em modo de Release.</remarks>
+    public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, bool validateInDebugMode)
+    {
+#if DEBUG
+        return validateInDebugMode
+            ? services.AddValidatedAuthentication()
+            : services.AddAuthenticationWithoutValidation();
+#else
+        return services.AddValidatedAuthentication();
+#endif
+    }
+
+    /// <summary>
     ///     Configura autenticação sem validação de token.
     /// </summary>
     /// <remarks>Utilize somente em serviços onde o API Gateway já faz a validação do token JWT.</remarks>
-    public static IServiceCollection AddAuthenticationWithoutValidation(this IServiceCollection services)
+    private static IServiceCollection AddAuthenticationWithoutValidation(this IServiceCollection services)
     {
         services.AddAuthentication(options =>
             {
@@ -47,7 +62,7 @@ public static class AuthExtensions
     /// <summary>
     ///     Configura autenticação que valida o token JWT através da chave pública.
     /// </summary>
-    public static IServiceCollection AddValidatedAuthentication(this IServiceCollection services)
+    private static IServiceCollection AddValidatedAuthentication(this IServiceCollection services)
     {
         services.AddAuthentication(options =>
             {

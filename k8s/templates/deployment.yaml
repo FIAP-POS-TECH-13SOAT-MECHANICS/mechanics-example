@@ -49,12 +49,21 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.app.name }}-email
                   key: password
-            - name: HOST_IP
+            - name: AwsCredentials__AccessKey
               valueFrom:
-                fieldRef:
-                  fieldPath: status.hostIP
-            - name: OTEL_EXPORTER_OTLP_ENDPOINT
-              value: "http://$(HOST_IP):4317"
+                secretKeyRef:
+                  name: {{ .Values.app.name }}-aws
+                  key: access-key-id
+            - name: AwsCredentials__SecretAccessKey
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.app.name }}-aws
+                  key: secret-access-key
+            - name: AwsCredentials__SessionToken
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.app.name }}-aws
+                  key: session-token
 
           envFrom:
             - configMapRef:

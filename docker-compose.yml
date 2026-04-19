@@ -1,11 +1,11 @@
-﻿name: mechanics-example
+﻿name: mechanics-:SERVICE_NAME
 
 services:
   dotnet:
     build: .
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__Default=Server=mssql;Database=mechanics-example;User Id=sa;Password=2%r6dZ6Xk@g3;TrustServerCertificate=True;
+      - ConnectionStrings__Default=Server=mssql;Database=mechanics-:SERVICE_NAME;User Id=sa;Password=2%r6dZ6Xk@g3;TrustServerCertificate=True;
       - EmailSenderOptions__SmtpServer=mailpit
     ports:
       - "5000:8080"
@@ -57,8 +57,8 @@ services:
 
 volumes:
   dotnet:
-    name: fiap-mechanics-dotnet
+    name: mechanics-:SERVICE_NAME-dotnet
   mssql:
-    name: fiap-mechanics-mssql
+    name: mechanics-:SERVICE_NAME-mssql
   mailpit:
-    name: fiap-mechanics-mailpit
+    name: mechanics-:SERVICE_NAME-mailpit
