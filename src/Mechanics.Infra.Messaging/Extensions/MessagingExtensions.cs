@@ -43,12 +43,10 @@ public static class MessagingExtensions
 
 public class MessagingBuilder(IServiceCollection services)
 {
-    public IServiceCollection Services { get; } = services;
-
     public MessagingBuilder AddConsumer<TConsumer, TEvent>() where TConsumer : class, IEventConsumer<TEvent> where TEvent : class
     {
-        Services.AddScoped<IEventConsumer<TEvent>, TConsumer>();
-        Services.AddHostedService<ConsumerBackgroundService<TEvent>>();
+        services.AddScoped<IEventConsumer<TEvent>, TConsumer>();
+        services.AddHostedService<ConsumerBackgroundService<TEvent>>();
 
         return this;
     }

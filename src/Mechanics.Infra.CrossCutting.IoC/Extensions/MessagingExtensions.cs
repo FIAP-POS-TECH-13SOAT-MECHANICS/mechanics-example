@@ -15,6 +15,9 @@ public static class MessagingExtensions
 
         services.AddMessaging(builder =>
         {
+            if (configuration.GetSection(nameof(MessagingOptions)).Get<MessagingOptions>()!.DisableConsumers)
+                return;
+
             builder.AddConsumer<CustomerCreatedConsumer, CustomerCreatedEvent>();
         });
 
