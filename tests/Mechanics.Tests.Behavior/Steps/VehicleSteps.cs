@@ -35,9 +35,12 @@ public class VehicleSteps(ScenarioContext ctx)
     {
         var response = (HttpResponseMessage)ctx["response"];
         var body = await response.Content.ReadAsStringAsync();
-        var json = JsonDocument.Parse(body).RootElement;
+        using var document = JsonDocument.Parse(body);
+        var json = document.RootElement;
 
         var items = json.GetProperty("items");
         Assert.AreEqual(0, items.GetArrayLength());
+        var totalCount = json.GetProperty("totalCount");
+        Assert.AreEqual(0, totalCount.GetInt32());
     }
 }
