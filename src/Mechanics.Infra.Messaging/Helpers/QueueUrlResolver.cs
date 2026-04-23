@@ -13,8 +13,10 @@ public class QueueUrlResolver(IAmazonSQS sqsClient, IOptions<MessagingOptions> o
 
     public Task<string> ResolveAsync<T>(CancellationToken cancellationToken) where T : class
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         return _urls.GetOrAdd(typeof(T), _ => new Lazy<Task<string>>(
-            () => FetchUrlAsync<T>(cancellationToken))).Value;
+            () => FetchUrlAsync<T>(CancellationToken.None))).Value;
     }
 
     private async Task<string> FetchUrlAsync<T>(CancellationToken cancellationToken) where T : class
