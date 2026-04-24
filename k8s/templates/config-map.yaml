@@ -22,5 +22,5 @@ data:
   EmailSenderOptions__SenderInformation__Address: {{ .Values.email.senderAddress | quote }}
   LuckyPennyLicenseKey: {{ .Values.luckyPennyLicenseKey | quote }}
   {{- range $key, $value := .Values.queueNames }}
-  MessagingOptions__QueueNames__{{ $key }}: "{{ $.Values.app.name }}-{{ $.Values.app.env }}-{{ $value }}"
+  MessagingOptions__QueueNames__{{ $key }}: "{{ $.Values.app.project }}-{{ $.Values.app.env }}-{{ $value }}"
   {{- end }}
