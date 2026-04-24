@@ -1,4 +1,5 @@
-﻿using Amazon.Runtime;
+﻿using Amazon;
+using Amazon.Runtime;
 using Amazon.SQS;
 using Mechanics.Infra.Messaging.Consumers;
 using Mechanics.Infra.Messaging.Helpers;
@@ -22,13 +23,20 @@ public static class MessagingExtensions
     {
         services.AddSingleton<IAmazonSQS>(sp =>
         {
-            var credentials = sp.GetRequiredService<IOptions<AwsCredentialsOptions>>().Value;
+            var options = sp.GetRequiredService<IOptions<AwsCredentialsOptions>>().Value;
+
+            if (options.UseLocalstack)
+                return new AmazonSQSClient(
+                    new BasicAWSCredentials("local", "empty-key"),
+                    new AmazonSQSConfig
+                    {
+                        RegionEndpoint = RegionEndpoint.GetBySystemName(options.Region),
+                        ServiceURL = options.LocalstackUrl,
+                    });
+
             return new AmazonSQSClient(
-                new SessionAWSCredentials(
-                    credentials.AccessKey,
-                    credentials.SecretAccessKey,
-                    credentials.SessionToken),
-                Amazon.RegionEndpoint.GetBySystemName(credentials.Region));
+                new SessionAWSCredentials(options.AccessKey, options.SecretAccessKey, options.SessionToken),
+                new AmazonSQSConfig { RegionEndpoint = RegionEndpoint.GetBySystemName(options.Region) });
         });
 
         services.AddSingleton<IEventPublisher, EventPublisher>();

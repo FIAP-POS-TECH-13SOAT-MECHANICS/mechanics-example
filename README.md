@@ -25,7 +25,7 @@ Ao executar o projeto em modo DEBUG, o token de autenticação **NÃO** é valid
 Primeiro inicie o banco de dados e serviço de e-mail:
 
 ```bash
-docker compose up mssql mailpit -d
+docker compose up mssql mailpit localstack -d
 ```
 
 Aguarde até o serviço `mssql` estar iniciando. O processo leva cerca de 40 segundos.
