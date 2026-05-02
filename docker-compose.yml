@@ -61,11 +61,12 @@ services:
   localstack:
     image: localstack/localstack:3
     environment:
-      - SERVICES=sqs
+      - SERVICES=sqs,lambda
     ports:
       - "4566:4566"
     volumes:
-      - ./scripts/localstack-init.sh:/etc/localstack/init/ready.d/localstack-init.sh
+      - ./scripts/localstack:/etc/localstack/init/ready.d:ro
+      - /var/run/docker.sock:/var/run/docker.sock
     healthcheck:
       test: 'curl -f http://localhost:4566/_localstack/health'
       interval: 2s

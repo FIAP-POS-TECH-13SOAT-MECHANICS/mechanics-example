@@ -1,4 +1,5 @@
 ﻿using Mechanics.Domain.Auth;
+using Mechanics.Infra.Security.Models;
 using System.Reflection;
 
 namespace Mechanics.Tests.Unit.Mocks;

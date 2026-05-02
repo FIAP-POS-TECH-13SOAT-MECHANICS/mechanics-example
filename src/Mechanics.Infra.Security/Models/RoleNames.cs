@@ -1,4 +1,4 @@
-﻿namespace Mechanics.Domain.Auth;
+﻿namespace Mechanics.Infra.Security.Models;
 
 public static class RoleNames
 {
@@ -28,4 +28,9 @@ public static class RoleNames
     ///     Permite gerenciar outros usuários do mesmo cliente.
     /// </summary>
     public const string CustomerAdmin = "CUSTOMER_ADMIN";
+
+    /// <summary>
+    ///     Role específica para uso pelos microserviços.
+    /// </summary>
+    public const string Service = "SERVICE";
 }

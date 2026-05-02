@@ -1,4 +1,5 @@
 ﻿using Mechanics.Domain.Auth;
+using Mechanics.Infra.Security.Models;
 
 namespace Mechanics.Infra.Data.Seeds;
 

@@ -12,6 +12,7 @@ using Mechanics.Domain.Products;
 using Mechanics.Domain.ServicesCatalog;
 using Mechanics.Domain.WorkOrders;
 using Mechanics.Infra.Data;
+using Mechanics.Infra.Security.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;

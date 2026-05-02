@@ -2,6 +2,7 @@
 using Mechanics.Application.Customers.Requests;
 using Mechanics.Domain.Auth;
 using Mechanics.Infra.Data.Seeds;
+using Mechanics.Infra.Security.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace Mechanics.Application.Auth.Requests;
