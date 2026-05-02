@@ -36,10 +36,11 @@ public class Program
         builder.Services.AddSwaggerDocumentation(builder.Configuration);
 
         builder.Services.AddDbContext(builder.Configuration)
-            .AddJwtAuthentication(validateInDebugMode: false)
+            .AddJwtAuthentication(builder.Environment)
             .AddAppServices(builder.Configuration)
             .AddRequestValidators()
             .AddMessaging(builder.Configuration)
+            .AddCrossServiceClients(builder.Configuration)
             .AddEmailSender(builder.Configuration);
 
         builder.Services.AddHealthChecks()

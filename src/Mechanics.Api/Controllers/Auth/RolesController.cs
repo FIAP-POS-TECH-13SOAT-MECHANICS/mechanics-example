@@ -1,6 +1,7 @@
 ﻿using Mechanics.Application.Auth.Responses;
 using Mechanics.Application.Auth.Services;
 using Mechanics.Domain.Auth;
+using Mechanics.Infra.Security.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,6 +1,7 @@
 ﻿using Mechanics.Application.Auth.Requests;
 using Mechanics.Domain.Auth;
 using Mechanics.Infra.Data.Seeds;
+using Mechanics.Infra.Security.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace Mechanics.Tests.Unit.Mocks;

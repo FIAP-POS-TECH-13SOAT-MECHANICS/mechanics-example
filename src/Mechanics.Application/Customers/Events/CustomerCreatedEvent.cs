@@ -1,6 +1,7 @@
 ﻿using Mechanics.Application.Customers.Requests;
 using Mechanics.Domain.Auth;
 using Mechanics.Infra.Data.Seeds;
+using Mechanics.Infra.Security.Models;
 
 namespace Mechanics.Application.Customers.Events;
 
