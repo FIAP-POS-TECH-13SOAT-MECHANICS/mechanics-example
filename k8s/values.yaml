@@ -20,7 +20,7 @@ image:
   tag: latest
 
 email:
-  smtpServer: mailpit-smtp
+  smtpServer: mailpit-smtp.default
   smtpPort: 25
   sslRequired: false
   senderName: FIAP Mechanics
